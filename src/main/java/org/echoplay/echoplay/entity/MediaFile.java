@@ -11,6 +11,7 @@ public class MediaFile {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String imageUrl;
     private String title;
     private String description;
     @Column(nullable = false)
@@ -21,17 +22,39 @@ public class MediaFile {
     @JoinColumn(name = "uploader_id")
     private User uploader;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "performer_id")
+    private Performer performer;
+
     public MediaFile() {
     }
 
-    public MediaFile(Long id, String title, String description, User uploader, Boolean approved, LocalDateTime uploadedAt, String fileName) {
+    public MediaFile(Long id, String imageUrl, String title, String description, String fileName, LocalDateTime uploadedAt, Boolean approved, User uploader, Performer performer) {
         this.id = id;
+        this.imageUrl = imageUrl;
         this.title = title;
         this.description = description;
-        this.uploader = uploader;
-        this.approved = approved;
-        this.uploadedAt = uploadedAt;
         this.fileName = fileName;
+        this.uploadedAt = uploadedAt;
+        this.approved = approved;
+        this.uploader = uploader;
+        this.performer = performer;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Performer getPerformer() {
+        return performer;
+    }
+
+    public void setPerformer(Performer performer) {
+        this.performer = performer;
     }
 
     public Long getId() {
