@@ -10,11 +10,11 @@ public class Mail {
     private Long id;
     private String subject;
     private String content;
-    private String to;
+    private String toEmail;
 
-    public Mail(Long id, String to, String content, String subject) {
+    public Mail(Long id, String toEmail, String content, String subject) {
         this.id = id;
-        this.to = to;
+        this.toEmail = toEmail;
         this.content = content;
         this.subject = subject;
     }
@@ -31,11 +31,11 @@ public class Mail {
     }
 
     public String getTo() {
-        return to;
+        return toEmail;
     }
 
     public void setTo(String to) {
-        this.to = to;
+        this.toEmail = to;
     }
 
     public String getContent() {
