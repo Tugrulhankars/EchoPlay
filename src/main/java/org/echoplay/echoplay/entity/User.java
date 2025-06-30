@@ -17,11 +17,13 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    private String verifyOtp;
-    private Boolean isAccountVerified;
-    private Long verifyOtpExpireAt;
-    private String resetOtp;
-    private Long resetOtpExpireAt;
+    private String verifyOtp;  //kulalnıcı kayıt olduktan sonra hesabı doğrulamak için gönderilen one time password
+    private Boolean isAccountVerified;//Kullanıcının hesabını doğrulayıp doğrulamadığını tutar.
+    private Long verifyOtpExpireAt;//verifyOtp kodunun son geçerlilik süresini zaman damgası (timestamp) olarak tutar.
+    private String resetOtp;//Kullanıcı “şifremi unuttum” dediğinde gönderilen şifre sıfırlama OTP'si.
+    private Long resetOtpExpireAt;//resetOtp’nin geçerlilik süresini (timestamp) tutar.
+
+
 
     @CreationTimestamp
     @Column(updatable = false)
