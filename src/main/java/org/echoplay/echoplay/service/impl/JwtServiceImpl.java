@@ -56,7 +56,7 @@ public class JwtServiceImpl {
         return extractExpiration(token).before(new Date());
     }
 
-    private Boolean validateToken(String token,UserDetails userDetails){
+    public Boolean validateToken(String token,UserDetails userDetails){
         final String email=extractEmail(token);
         return (email.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
