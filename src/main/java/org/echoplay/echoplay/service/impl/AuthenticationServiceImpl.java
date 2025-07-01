@@ -3,6 +3,7 @@ package org.echoplay.echoplay.service.impl;
 import org.echoplay.echoplay.dto.request.LoginRequest;
 import org.echoplay.echoplay.dto.request.RegisterRequest;
 import org.echoplay.echoplay.dto.response.LoginResponse;
+import org.echoplay.echoplay.entity.Role;
 import org.echoplay.echoplay.entity.User;
 import org.echoplay.echoplay.repository.UserRepository;
 import org.echoplay.echoplay.service.AuthenticationService;
@@ -30,6 +31,11 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     @Override
     public String register(RegisterRequest registerRequest) {
         User user = new User();
+        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+        user.setFirstName(registerRequest.getFirstName());
+        user.setLastName(registerRequest.getLastName());
+        user.setEmail(registerRequest.getEmail());
+        user.setRoles(Role.USER);
         userRepository.save(user);
         return "Kayıt başarılı";
     }
@@ -38,7 +44,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     public LoginResponse login(LoginRequest loginRequest) {
         new UsernamePasswordAuthenticationToken(loginRequest.getEmail(),loginRequest.getPassword());
         var user=userRepository.findByEmail(loginRequest.getEmail());
-        String jwt=jwtService.generateToken((UserDetails) user);
+        String jwt=jwtService.generateToken(user.getEmail());
 
         return new LoginResponse(jwt);
     }
