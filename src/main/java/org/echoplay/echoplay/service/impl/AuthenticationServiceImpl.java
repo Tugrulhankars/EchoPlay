@@ -30,14 +30,20 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public String register(RegisterRequest registerRequest) {
-        User user = new User();
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        user.setFirstName(registerRequest.getFirstName());
-        user.setLastName(registerRequest.getLastName());
-        user.setEmail(registerRequest.getEmail());
-        user.setRoles(Role.USER);
-        userRepository.save(user);
-        return "Kayıt başarılı";
+        try {
+            User user = new User();
+            user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
+            user.setFirstName(registerRequest.getFirstName());
+            user.setLastName(registerRequest.getLastName());
+            user.setEmail(registerRequest.getEmail());
+            user.setRoles(Role.USER);
+            userRepository.save(user);
+            return "Kayıt başarılı";
+        }catch (Exception e){
+            return "Kayıt başarısız";
+
+        }
+
     }
 
     @Override

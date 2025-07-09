@@ -12,7 +12,7 @@ import java.util.List;
 
 @Table(name = "users")
 @Entity
-public class User implements UserDetails {
+public class User extends Auditable implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,19 +29,14 @@ public class User implements UserDetails {
 
 
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private Timestamp createdAt;
-    @UpdateTimestamp
-    private Timestamp updatedAt;
-    private Boolean isDeleted;
+
     @Enumerated(EnumType.STRING)
     private Role roles;
 
     public User() {
     }
 
-    public User(Long id, String firstName, String lastName, String email, String password, String verifyOtp, Boolean isAccountVerified, Long verifyOtpExpireAt, String resetOtp, Long resetOtpExpireAt, Timestamp createdAt, Timestamp updatedAt, Boolean isDeleted, Role roles) {
+    public User(Long id, String firstName, String lastName, String email, String password, String verifyOtp, Boolean isAccountVerified, Long verifyOtpExpireAt, String resetOtp, Long resetOtpExpireAt,  Boolean isDeleted, Role roles) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,9 +47,6 @@ public class User implements UserDetails {
         this.verifyOtpExpireAt = verifyOtpExpireAt;
         this.resetOtp = resetOtp;
         this.resetOtpExpireAt = resetOtpExpireAt;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-        this.isDeleted = isDeleted;
         this.roles = roles;
     }
 
@@ -74,29 +66,6 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public Boolean getDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(Boolean deleted) {
-        isDeleted = deleted;
-    }
-
-    public Timestamp getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Timestamp updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
 
     public Long getResetOtpExpireAt() {
         return resetOtpExpireAt;

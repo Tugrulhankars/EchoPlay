@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "media_files")
-public class MediaFile {
+public class MediaFile extends Auditable{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,6 +18,7 @@ public class MediaFile {
     private String fileName;
     private LocalDateTime uploadedAt;
     private Boolean approved=false; //admin onayı
+    
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "uploader_id")
     private User uploader;
@@ -26,10 +27,14 @@ public class MediaFile {
     @JoinColumn(name = "performer_id")
     private Performer performer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
     public MediaFile() {
     }
 
-    public MediaFile(Long id, String imageUrl, String title, String description, String fileName, LocalDateTime uploadedAt, Boolean approved, User uploader, Performer performer) {
+    public MediaFile(Long id, String imageUrl, String title, String description, String fileName, LocalDateTime uploadedAt, Boolean approved, User uploader, Performer performer, Category category) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.title = title;
@@ -39,6 +44,7 @@ public class MediaFile {
         this.approved = approved;
         this.uploader = uploader;
         this.performer = performer;
+        this.category = category;
     }
 
     public String getImageUrl() {
@@ -111,5 +117,13 @@ public class MediaFile {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+    
+    public Category getCategory() {
+        return category;
+    }
+    
+    public void setCategory(Category category) {
+        this.category = category;
     }
 }

@@ -8,6 +8,7 @@ import org.echoplay.echoplay.dto.response.LoginResponse;
 import org.echoplay.echoplay.service.AuthenticationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,7 +25,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     @Operation(description = "Register")
-    public ResponseEntity<String> register(RegisterRequest registerRequest) {
+    public ResponseEntity<String> register(@RequestBody RegisterRequest registerRequest) {
        String response= authenticationService.register(registerRequest);
        return  ResponseEntity.ok(response);
     }
