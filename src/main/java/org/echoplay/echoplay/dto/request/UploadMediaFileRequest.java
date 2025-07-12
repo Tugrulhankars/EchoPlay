@@ -10,8 +10,10 @@ public class UploadMediaFileRequest {
     private LocalDateTime uploadedAt;
     private String performerFirstName;
     private String performerLastName;
+    private Long categoryId;
+    private String categoryName;
 
-    public UploadMediaFileRequest(String imageUrl, String performerLastName, String performerFirstName, LocalDateTime uploadedAt, String fileName, String description, String title) {
+    public UploadMediaFileRequest(String imageUrl, String performerLastName, String performerFirstName, LocalDateTime uploadedAt, String fileName, String description, String title, Long categoryId, String categoryName) {
         this.imageUrl = imageUrl;
         this.performerLastName = performerLastName;
         this.performerFirstName = performerFirstName;
@@ -19,9 +21,27 @@ public class UploadMediaFileRequest {
         this.fileName = fileName;
         this.description = description;
         this.title = title;
+        this.categoryId=categoryId;
+        this.categoryName=categoryName;
     }
 
     public UploadMediaFileRequest() {
+    }
+
+    public Long getCategoryId() {
+        return categoryId;
+    }
+
+    public void setCategoryId(Long categoryId) {
+        this.categoryId = categoryId;
+    }
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
     }
 
     public String getImageUrl() {

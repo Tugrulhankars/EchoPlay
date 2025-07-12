@@ -38,4 +38,13 @@ public class PerformerServiceImpl implements PerformerService {
         Performer performer=performerRepository.findById(id).get();
         return performer;
     }
+
+    @Override
+    public Performer findPerformerByFullName(String firstName, String lastName) {
+        Performer performer=performerRepository.findPerformerByFullName(firstName,lastName);
+        if(performer!=null){
+            return performer;
+        }
+        return null;
+    }
 }

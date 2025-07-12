@@ -1,4 +1,7 @@
 package org.echoplay.echoplay.repository;
 
-public interface MediaFileRepository {
+import org.echoplay.echoplay.entity.MediaFile;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface MediaFileRepository extends JpaRepository<MediaFile,Long> {
 }

@@ -10,4 +10,5 @@ public interface CategoryService {
     String addCategory(CreateCategoryRequest request);
     String deleteCategory(Long id);
     List<Category> getAllCategory();
+    Category getCategoryById(Long id);
 }

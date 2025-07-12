@@ -10,20 +10,20 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class SwaggerConfig {
+
     @Bean
-    public OpenAPI openAPI(){
+    public OpenAPI customOpenAPI() {
         return new OpenAPI()
                 .info(new Info()
-                        .title("Echo Play API")
-                        .version("1.0.0")
-                        .description("Echo Play API"))
-                .addSecurityItem(new SecurityRequirement().addList("Bearer"))
-                .components(new Components()
-                        .addSecuritySchemes("bearerAuth",new SecurityScheme()
-                                .name("Authorization")
+                        .title("EchoPlay API")
+                        .description("EchoPlay API")
+
+                ).addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
+                .components(new Components().addSecuritySchemes("bearerAuth",
+                        new SecurityScheme()
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
-                                .bearerFormat("JWT")));
+                                .bearerFormat("JWT")
+                                .description("JWT Token değerini giriniz")));
     }
-
 }

@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.time.Duration;
+import java.util.UUID;
 
 @Service
 public class AwsS3ServiceImpl implements AwsS3Service {
@@ -28,15 +29,20 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     }
 
     @Override
-    public String uploadMultipartFile(MultipartFile file) {
+    public String uploadMultipartFile(MultipartFile file,Long userId) {
         try {
-            PutObjectRequest putObjectRequest=PutObjectRequest.builder()
+            // Kullanıcıya özel bir key (path) oluştur
+            String key = "user-" + userId + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
+
+            PutObjectRequest putObjectRequest = PutObjectRequest.builder()
                     .bucket("echoplay-bucket")
-                    .key(file.getOriginalFilename())
+                    .key(key)
+                    .contentType(file.getContentType())
                     .contentLength(file.getSize())
                     .build();
+
             s3Client.putObject(putObjectRequest,
-                    RequestBody.fromBytes(file.getInputStream().readAllBytes()));
+                    RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
             return file.getOriginalFilename()+" uploaded successfully";
         } catch (Exception e) {
             return e.getMessage();

@@ -8,51 +8,46 @@ import jakarta.servlet.http.HttpServletRequestWrapper;
 import java.io.BufferedReader;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 public class RequestWrapper extends HttpServletRequestWrapper {
-    public  static String body;
-    private HttpServletRequest request;
+    private final String body; // static kaldırıldı
+
     public RequestWrapper(HttpServletRequest request) {
         super(request);
-        body="";
-        try (BufferedReader bufferedReader=request.getReader()){
+        StringBuilder stringBuilder = new StringBuilder();
+        try (BufferedReader bufferedReader = request.getReader()) {
             String line;
-            while ((line=bufferedReader.readLine())!=null){
-                body+=line;
+            while ((line = bufferedReader.readLine()) != null) {
+                stringBuilder.append(line);
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        body = stringBuilder.toString();
     }
-
-    public Map<String,String> getAllHeaders(){
-        Map<String,String> headers=new HashMap<>();
-        Collections.list(getHeaderNames()).forEach(name->headers.put(name,getHeader(name)));
-        return headers;
-    }
-
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
-        final ByteArrayInputStream byteArrayInputStream=new ByteArrayInputStream(body.getBytes());
+        final ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(body.getBytes(StandardCharsets.UTF_8));
 
         return new ServletInputStream() {
             @Override
             public boolean isFinished() {
-                return false;
+                return byteArrayInputStream.available() == 0;
             }
 
             @Override
             public boolean isReady() {
-                return false;
+                return true;
             }
 
             @Override
             public void setReadListener(ReadListener readListener) {
-
+                // opsiyonel implementasyon
             }
 
             @Override
