@@ -14,20 +14,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class RequestWrapper extends HttpServletRequestWrapper {
-    private final String body; // static kaldırıldı
+
+    private final String body;
 
     public RequestWrapper(HttpServletRequest request) {
         super(request);
-        StringBuilder stringBuilder = new StringBuilder();
-        try (BufferedReader bufferedReader = request.getReader()) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                stringBuilder.append(line);
+
+        if (request.getContentType() != null && request.getContentType().startsWith("multipart/")) {
+            this.body = ""; // Multipart ise body okunmaz
+        } else {
+            StringBuilder stringBuilder = new StringBuilder();
+            try (BufferedReader bufferedReader = request.getReader()) {
+                String line;
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuilder.append(line);
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            this.body = stringBuilder.toString();
         }
-        body = stringBuilder.toString();
     }
 
     @Override
@@ -46,14 +52,16 @@ public class RequestWrapper extends HttpServletRequestWrapper {
             }
 
             @Override
-            public void setReadListener(ReadListener readListener) {
-                // opsiyonel implementasyon
-            }
+            public void setReadListener(ReadListener readListener) {}
 
             @Override
             public int read() throws IOException {
                 return byteArrayInputStream.read();
             }
         };
+    }
+
+    public String getBody() {
+        return this.body;
     }
 }

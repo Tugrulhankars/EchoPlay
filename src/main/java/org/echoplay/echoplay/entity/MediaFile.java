@@ -1,5 +1,6 @@
 package org.echoplay.echoplay.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
@@ -16,6 +17,9 @@ public class MediaFile extends Auditable{
     private String description;
     @Column(nullable = false)
     private String fileName;
+    @Column(length = 1000)
+    private String mediaFileUrl;
+    @JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss")
     private LocalDateTime uploadedAt;
     private Boolean approved=false; //admin onayı
     
@@ -34,7 +38,7 @@ public class MediaFile extends Auditable{
     public MediaFile() {
     }
 
-    public MediaFile(Long id, String imageUrl, String title, String description, String fileName, LocalDateTime uploadedAt, Boolean approved, User uploader, Performer performer, Category category) {
+    public MediaFile(Long id, String imageUrl, String title, String description, String fileName, LocalDateTime uploadedAt, Boolean approved, User uploader, Performer performer, Category category,String mediaFileUrl) {
         this.id = id;
         this.imageUrl = imageUrl;
         this.title = title;
@@ -45,6 +49,15 @@ public class MediaFile extends Auditable{
         this.uploader = uploader;
         this.performer = performer;
         this.category = category;
+        this.mediaFileUrl=mediaFileUrl;
+    }
+
+    public String getMediaFileUrl() {
+        return mediaFileUrl;
+    }
+
+    public void setMediaFileUrl(String mediaFileUrl) {
+        this.mediaFileUrl = mediaFileUrl;
     }
 
     public String getImageUrl() {

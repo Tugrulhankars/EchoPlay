@@ -14,22 +14,26 @@ import java.io.IOException;
 @Component
 public class LoggingFilter extends OncePerRequestFilter {
 
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        RequestWrapper requestWrapper = new RequestWrapper(request);
+        HttpServletRequest requestToUse = request;
+
+        if (request.getContentType() != null && !request.getContentType().startsWith("multipart/")) {
+            requestToUse = new RequestWrapper(request); // JSON veya x-www-form-urlencoded için
+        }
+
         ResponseWrapper responseWrapper = new ResponseWrapper(response);
 
-        filterChain.doFilter(requestWrapper, responseWrapper);
+        filterChain.doFilter(requestToUse, responseWrapper);
 
-        // İstersen burada response body’yi okuyup loglayabilirsin
+        // Response Body Loglama
         byte[] copy = responseWrapper.getCopyBody();
         String responseBody = new String(copy, response.getCharacterEncoding());
         System.out.println("Response Body: " + responseBody);
 
-        // Response'u client'a yazdırmayı unutma
+        // Response tekrar yazdır
         response.getOutputStream().write(copy);
     }
 }

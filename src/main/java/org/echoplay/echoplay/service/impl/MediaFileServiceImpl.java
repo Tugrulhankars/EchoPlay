@@ -2,6 +2,7 @@ package org.echoplay.echoplay.service.impl;
 
 import jakarta.transaction.Transactional;
 import org.echoplay.echoplay.dto.request.UploadMediaFileRequest;
+import org.echoplay.echoplay.dto.response.MediaFileResponse;
 import org.echoplay.echoplay.entity.Category;
 import org.echoplay.echoplay.entity.MediaFile;
 import org.echoplay.echoplay.entity.Performer;
@@ -11,6 +12,7 @@ import org.echoplay.echoplay.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -49,9 +51,9 @@ public class MediaFileServiceImpl implements MediaFileService {
             mediaFile.setDescription(request.getDescription());
             mediaFile.setImageUrl(request.getImageUrl());
             mediaFile.setTitle(request.getTitle());
-            mediaFile.setUploadedAt(request.getUploadedAt());
             mediaFile.setPerformer(performer);
             mediaFile.setCategory(category);
+            mediaFile.setMediaFileUrl(s3Key);
             //mediaFile.setS3Key(s3Key); // Yeni alan: S3 dosya yolu
             mediaFileRepository.save(mediaFile);
 
@@ -78,16 +80,32 @@ public class MediaFileServiceImpl implements MediaFileService {
 
     @Override
     public String getMediaFileUrlById(Long id) {
-        return "";
+        MediaFile mediaFile=mediaFileRepository.findById(id).get();
+        String url=mediaFile.getMediaFileUrl();
+        return url;
     }
 
     @Override
-    public List<String> getAllMediaFileUrlsByCategoryId(Long categoryId) {
-        return List.of();
+    public List<MediaFileResponse> getAllMediaFileByCategoryId(Long categoryId) {
+        List<MediaFile> mediaFiles=mediaFileRepository.findMediaFileByCategoryId(categoryId);
+        List<MediaFileResponse> mediaFileResponses=new ArrayList<>();
+        for (MediaFile mediaFile:mediaFiles) {
+            MediaFileResponse mediaFileResponse=new MediaFileResponse();
+            mediaFileResponse.setId(mediaFile.getId());
+            mediaFileResponse.setTitle(mediaFile.getTitle());
+            mediaFileResponse.setDescription(mediaFile.getDescription());
+            mediaFileResponse.setImageUrl(mediaFile.getImageUrl());
+            mediaFileResponse.setFileName(mediaFile.getFileName());
+            mediaFileResponse.setUploadedAt(mediaFile.getUploadedAt());
+            mediaFileResponses.add(mediaFileResponse);
+        }
+        return mediaFileResponses;
     }
 
+
+
     @Override
-    public List<String> getAllMediaFileUrlsByPerformerId(Long performerId) {
+    public List<MediaFileResponse> getAllMediaFileUrlsByPerformerId(Long performerId) {
         return List.of();
     }
 }

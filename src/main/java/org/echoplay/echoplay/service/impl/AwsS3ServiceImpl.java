@@ -35,7 +35,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
             String key = "user-" + userId + "/" + UUID.randomUUID() + "-" + file.getOriginalFilename();
 
             PutObjectRequest putObjectRequest = PutObjectRequest.builder()
-                    .bucket("echoplay-bucket")
+                    .bucket("echo-play")
                     .key(key)
                     .contentType(file.getContentType())
                     .contentLength(file.getSize())
@@ -43,7 +43,8 @@ public class AwsS3ServiceImpl implements AwsS3Service {
 
             s3Client.putObject(putObjectRequest,
                     RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
-            return file.getOriginalFilename()+" uploaded successfully";
+            String url=generatePreSignedUrl(key,360);
+            return url;
         } catch (Exception e) {
             return e.getMessage();
 
@@ -53,7 +54,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     @Override
     public String downloadFile(String fileName) {
         GetObjectRequest getObjectRequest=GetObjectRequest.builder()
-                .bucket("echoplay-bucket")
+                .bucket("echo-play")
                 .key(fileName)
                 .build();
 
@@ -72,7 +73,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     @Override
     public void deleteFile(String fileName) {
         DeleteObjectRequest deleteObjectRequest=DeleteObjectRequest.builder()
-                .bucket("echoplay-bucket")
+                .bucket("echo-play")
                 .key(fileName)
                 .build();
         s3Client.deleteObject(deleteObjectRequest);
@@ -83,12 +84,14 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     public String updateFile(String fileName, MultipartFile file) {
         try {
             PutObjectRequest putObjectRequest=PutObjectRequest.builder()
-                    .bucket("echoplay-bucket")
+                    .bucket("echo-play")
                     .key(fileName)
                     .contentLength(file.getSize())
                     .build();
             s3Client.putObject(putObjectRequest,
                     RequestBody.fromBytes(file.getInputStream().readAllBytes()));
+
+            String url=generatePreSignedUrl(fileName,3600000);
             return file.getOriginalFilename() +" updated successfully";
         }catch (Exception e) {
             return e.getMessage();
@@ -101,7 +104,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
             GetObjectPresignRequest presignRequest = GetObjectPresignRequest.builder()
                     .signatureDuration(Duration.ofMinutes(expirationMinutes))
                     .getObjectRequest(GetObjectRequest.builder()
-                            .bucket("echoplay-bucket")
+                            .bucket("echo-play")
                             .key(fileName)
                             .build())
                     .build();
@@ -116,7 +119,7 @@ public class AwsS3ServiceImpl implements AwsS3Service {
     public InputStream streamFile(String fileName) {
         try {
             GetObjectRequest getObjectRequest = GetObjectRequest.builder()
-                    .bucket("echoplay-bucket")
+                    .bucket("echo-play")
                     .key(fileName)
                     .build();
             

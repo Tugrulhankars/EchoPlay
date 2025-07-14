@@ -60,11 +60,12 @@ public class ResponseWrapper extends HttpServletResponseWrapper {
     public void flushBuffer() throws IOException {
         if (writerWrapper != null) {
             writerWrapper.flush();
-        }
-        else if (outputStreamWrapper != null) {
+        } else if (outputStreamWrapper != null) {
             copier.flush();
         }
+        super.flushBuffer(); // Gerçek response buffer'ı da flush edilsin
     }
+
 
     public byte[] getCopyBody() {
         if (copier != null) {
